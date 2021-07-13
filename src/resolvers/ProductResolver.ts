@@ -5,9 +5,9 @@ import {
   Int,
   Query,
   InputType,
-  Field
+  Field,
 } from "type-graphql";
-import {Product} from "../entity/Product";
+import { Product } from "../entity/Product";
 
 @InputType()
 class ProductInput {
@@ -20,10 +20,10 @@ class ProductInput {
 
 @InputType()
 class ProductUpdateInput {
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => Int, {nullable: true})
+  @Field(() => Int, { nullable: true })
   quantity?: number;
 }
 
@@ -37,10 +37,10 @@ export class ProductResolver {
     return await newProduct.save();
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Int)
   async deleteProduct(@Arg("id", () => Int) id: number) {
     await Product.delete(id);
-    return true;
+    return id;
   }
 
   @Mutation(() => Boolean)
@@ -48,8 +48,8 @@ export class ProductResolver {
     @Arg("id", () => Int) id: number,
     @Arg("fields", () => ProductUpdateInput) fields: ProductUpdateInput
   ) {
-    await Product.update({id}, fields);
-    return true;
+    await Product.update({ id }, fields);
+    return id;
   }
 
   @Query(() => [Product])
